@@ -1,0 +1,123 @@
+{
+  "navigation": {
+    "dashboard": "Painel",
+    "inspection": "Inspeção",
+    "jobs": "Trabalhos"
+  },
+  "dashboard": {
+    "title": "Painel de Operação",
+    "subtitle": "Status da máquina e alertas em tempo real",
+    "metrics": {
+      "fuel": "Nível de Combustível",
+      "engine_temp": "Temp. Motor",
+      "hydraulic_pressure": "Pressão Hidráulica",
+      "load_weight": "Peso da Carga",
+      "tilt_angle": "Ângulo de Inclinação",
+      "operating_hours": "Horas de Operação"
+    },
+    "units": {
+      "percent": "%",
+      "celsius": "°C",
+      "psi": "PSI",
+      "tons": "tons",
+      "degrees": "°",
+      "hours": "hrs"
+    },
+    "alerts": {
+      "title": "Alertas de Segurança",
+      "engine_overheat": "Temperatura do motor crítica - Pare a operação imediatamente",
+      "hydraulic_low": "Pressão hidráulica baixa detectada",
+      "overload": "Peso da carga excede limites seguros",
+      "maintenance_due": "Manutenção programada em 2 horas"
+    },
+    "terrain": {
+      "title": "Análise do Terreno",
+      "current": "Atual: Solo macio detectado",
+      "suggestion": "Reduza a velocidade e evite curvas acentuadas"
+    }
+  },
+  "inspection": {
+    "title": "Inspeção Pré-Operacional",
+    "subtitle": "Complete todas as verificações antes de iniciar a operação",
+    "sections": {
+      "tires": "Pneus e Esteiras",
+      "hydraulics": "Sistema Hidráulico",
+      "engine": "Motor e Óleo",
+      "fuel": "Sistema de Combustível",
+      "electrical": "Sistema Elétrico"
+    },
+    "checks": {
+      "tire_pressure": "Verificar pressão e banda de rodagem",
+      "tire_damage": "Inspecionar cortes ou danos",
+      "hydraulic_fluid": "Verificar nível do fluido hidráulico",
+      "hydraulic_leaks": "Inspecionar vazamentos hidráulicos",
+      "oil_level": "Verificar nível do óleo do motor",
+      "coolant_level": "Verificar nível do líquido de arrefecimento",
+      "fuel_level": "Verificar nível de combustível",
+      "fuel_leaks": "Verificar vazamentos de combustível",
+      "battery": "Verificar conexões da bateria",
+      "lights": "Testar todas as luzes e indicadores"
+    },
+    "actions": {
+      "pass": "Aprovar",
+      "fail": "Reprovar",
+      "add_note": "Adicionar Nota",
+      "take_photo": "Tirar Foto",
+      "voice_memo": "Memo de Voz",
+      "next_section": "Próxima Seção",
+      "complete": "Completar Inspeção",
+      "start_voice_guide": "Iniciar Guia de Voz"
+    },
+    "status": {
+      "not_started": "Não Iniciado",
+      "in_progress": "Em Andamento",
+      "completed": "Concluído",
+      "failed": "Falhado"
+    }
+  },
+  "jobs": {
+    "title": "Trabalhos de Hoje",
+    "subtitle": "Tarefas atribuídas e localizações",
+    "status": {
+      "pending": "Pendente",
+      "in_progress": "Em Andamento",
+      "completed": "Concluído"
+    },
+    "details": {
+      "location": "Localização",
+      "eta": "Tempo Estimado",
+      "priority": "Prioridade",
+      "load_type": "Tipo de Carga",
+      "destination": "Destino"
+    },
+    "actions": {
+      "start_job": "Iniciar Trabalho",
+      "view_map": "Ver Mapa",
+      "complete_job": "Completar Trabalho"
+    }
+  },
+  "voice": {
+    "listening": "Ouvindo...",
+    "not_supported": "Reconhecimento de voz não suportado",
+    "commands": {
+      "dashboard": "Ir para o painel",
+      "inspection": "Iniciar inspeção",
+      "jobs": "Mostrar trabalhos",
+      "read_aloud": "Ler esta página"
+    }
+  },
+  "offline": {
+    "indicator": "Modo Offline - Funcionalidade limitada disponível"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro ocorreu",
+    "retry": "Tentar Novamente",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "close": "Fechar"
+  }
+}

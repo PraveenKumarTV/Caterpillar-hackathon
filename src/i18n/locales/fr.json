@@ -1,0 +1,123 @@
+{
+  "navigation": {
+    "dashboard": "Tableau de Bord",
+    "inspection": "Inspection",
+    "jobs": "Travaux"
+  },
+  "dashboard": {
+    "title": "Tableau de Bord d'Opération",
+    "subtitle": "État de la machine et alertes en temps réel",
+    "metrics": {
+      "fuel": "Niveau de Carburant",
+      "engine_temp": "Temp. Moteur",
+      "hydraulic_pressure": "Pression Hydraulique",
+      "load_weight": "Poids de Charge",
+      "tilt_angle": "Angle d'Inclinaison",
+      "operating_hours": "Heures d'Opération"
+    },
+    "units": {
+      "percent": "%",
+      "celsius": "°C",
+      "psi": "PSI",
+      "tons": "tonnes",
+      "degrees": "°",
+      "hours": "hrs"
+    },
+    "alerts": {
+      "title": "Alertes de Sécurité",
+      "engine_overheat": "Température moteur critique - Arrêtez l'opération immédiatement",
+      "hydraulic_low": "Pression hydraulique faible détectée",
+      "overload": "Le poids de charge dépasse les limites sûres",
+      "maintenance_due": "Maintenance programmée dans 2 heures"
+    },
+    "terrain": {
+      "title": "Analyse du Terrain",
+      "current": "Actuel: Sol mou détecté",
+      "suggestion": "Réduisez la vitesse et évitez les virages serrés"
+    }
+  },
+  "inspection": {
+    "title": "Inspection Pré-Opérationnelle",
+    "subtitle": "Complétez toutes les vérifications avant de commencer l'opération",
+    "sections": {
+      "tires": "Pneus et Chenilles",
+      "hydraulics": "Système Hydraulique",
+      "engine": "Moteur et Huile",
+      "fuel": "Système de Carburant",
+      "electrical": "Système Électrique"
+    },
+    "checks": {
+      "tire_pressure": "Vérifier la pression et la bande de roulement",
+      "tire_damage": "Inspecter les coupures ou dommages",
+      "hydraulic_fluid": "Vérifier le niveau de fluide hydraulique",
+      "hydraulic_leaks": "Inspecter les fuites hydrauliques",
+      "oil_level": "Vérifier le niveau d'huile moteur",
+      "coolant_level": "Vérifier le niveau de liquide de refroidissement",
+      "fuel_level": "Vérifier le niveau de carburant",
+      "fuel_leaks": "Vérifier les fuites de carburant",
+      "battery": "Vérifier les connexions de batterie",
+      "lights": "Tester toutes les lumières et indicateurs"
+    },
+    "actions": {
+      "pass": "Réussir",
+      "fail": "Échouer",
+      "add_note": "Ajouter Note",
+      "take_photo": "Prendre Photo",
+      "voice_memo": "Mémo Vocal",
+      "next_section": "Section Suivante",
+      "complete": "Terminer Inspection",
+      "start_voice_guide": "Démarrer Guide Vocal"
+    },
+    "status": {
+      "not_started": "Non Commencé",
+      "in_progress": "En Cours",
+      "completed": "Terminé",
+      "failed": "Échoué"
+    }
+  },
+  "jobs": {
+    "title": "Travaux d'Aujourd'hui",
+    "subtitle": "Tâches assignées et emplacements",
+    "status": {
+      "pending": "En Attente",
+      "in_progress": "En Cours",
+      "completed": "Terminé"
+    },
+    "details": {
+      "location": "Emplacement",
+      "eta": "Temps Estimé",
+      "priority": "Priorité",
+      "load_type": "Type de Charge",
+      "destination": "Destination"
+    },
+    "actions": {
+      "start_job": "Commencer Travail",
+      "view_map": "Voir Carte",
+      "complete_job": "Terminer Travail"
+    }
+  },
+  "voice": {
+    "listening": "Écoute...",
+    "not_supported": "Reconnaissance vocale non supportée",
+    "commands": {
+      "dashboard": "Aller au tableau de bord",
+      "inspection": "Commencer inspection",
+      "jobs": "Montrer travaux",
+      "read_aloud": "Lire cette page"
+    }
+  },
+  "offline": {
+    "indicator": "Mode Hors Ligne - Fonctionnalité limitée disponible"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur survenue",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "save": "Sauvegarder",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer"
+  }
+}

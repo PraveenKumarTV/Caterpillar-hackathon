@@ -1,0 +1,123 @@
+{
+  "navigation": {
+    "dashboard": "Panel",
+    "inspection": "Inspección",
+    "jobs": "Trabajos"
+  },
+  "dashboard": {
+    "title": "Panel de Operación",
+    "subtitle": "Estado de la máquina y alertas en tiempo real",
+    "metrics": {
+      "fuel": "Nivel de Combustible",
+      "engine_temp": "Temp. Motor",
+      "hydraulic_pressure": "Presión Hidráulica",
+      "load_weight": "Peso de Carga",
+      "tilt_angle": "Ángulo de Inclinación",
+      "operating_hours": "Horas de Operación"
+    },
+    "units": {
+      "percent": "%",
+      "celsius": "°C",
+      "psi": "PSI",
+      "tons": "tons",
+      "degrees": "°",
+      "hours": "hrs"
+    },
+    "alerts": {
+      "title": "Alertas de Seguridad",
+      "engine_overheat": "Temperatura del motor crítica - Detenga la operación inmediatamente",
+      "hydraulic_low": "Presión hidráulica baja detectada",
+      "overload": "El peso de la carga excede los límites seguros",
+      "maintenance_due": "Mantenimiento programado en 2 horas"
+    },
+    "terrain": {
+      "title": "Análisis del Terreno",
+      "current": "Actual: Suelo blando detectado",
+      "suggestion": "Reduzca la velocidad y evite giros bruscos"
+    }
+  },
+  "inspection": {
+    "title": "Inspección Pre-Operacional",
+    "subtitle": "Complete todas las verificaciones antes de iniciar la operación",
+    "sections": {
+      "tires": "Neumáticos y Orugas",
+      "hydraulics": "Sistema Hidráulico",
+      "engine": "Motor y Aceite",
+      "fuel": "Sistema de Combustible",
+      "electrical": "Sistema Eléctrico"
+    },
+    "checks": {
+      "tire_pressure": "Verificar presión y banda de rodadura",
+      "tire_damage": "Inspeccionar cortes o daños",
+      "hydraulic_fluid": "Verificar nivel de fluido hidráulico",
+      "hydraulic_leaks": "Inspeccionar fugas hidráulicas",
+      "oil_level": "Verificar nivel de aceite del motor",
+      "coolant_level": "Verificar nivel de refrigerante",
+      "fuel_level": "Verificar nivel de combustible",
+      "fuel_leaks": "Verificar fugas de combustible",
+      "battery": "Verificar conexiones de batería",
+      "lights": "Probar todas las luces e indicadores"
+    },
+    "actions": {
+      "pass": "Aprobar",
+      "fail": "Fallar",
+      "add_note": "Agregar Nota",
+      "take_photo": "Tomar Foto",
+      "voice_memo": "Memo de Voz",
+      "next_section": "Siguiente Sección",
+      "complete": "Completar Inspección",
+      "start_voice_guide": "Iniciar Guía de Voz"
+    },
+    "status": {
+      "not_started": "No Iniciado",
+      "in_progress": "En Progreso",
+      "completed": "Completado",
+      "failed": "Fallido"
+    }
+  },
+  "jobs": {
+    "title": "Trabajos de Hoy",
+    "subtitle": "Tareas asignadas y ubicaciones",
+    "status": {
+      "pending": "Pendiente",
+      "in_progress": "En Progreso",
+      "completed": "Completado"
+    },
+    "details": {
+      "location": "Ubicación",
+      "eta": "Tiempo Estimado",
+      "priority": "Prioridad",
+      "load_type": "Tipo de Carga",
+      "destination": "Destino"
+    },
+    "actions": {
+      "start_job": "Iniciar Trabajo",
+      "view_map": "Ver Mapa",
+      "complete_job": "Completar Trabajo"
+    }
+  },
+  "voice": {
+    "listening": "Escuchando...",
+    "not_supported": "Reconocimiento de voz no compatible",
+    "commands": {
+      "dashboard": "Ir al panel",
+      "inspection": "Iniciar inspección",
+      "jobs": "Mostrar trabajos",
+      "read_aloud": "Leer esta página"
+    }
+  },
+  "offline": {
+    "indicator": "Modo Sin Conexión - Funcionalidad limitada disponible"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "retry": "Reintentar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar"
+  }
+}

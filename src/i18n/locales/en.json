@@ -1,0 +1,123 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "inspection": "Pre-Op Check",
+    "jobs": "Job Briefing"
+  },
+  "dashboard": {
+    "title": "Operation Dashboard",
+    "subtitle": "Real-time machine status and alerts",
+    "metrics": {
+      "fuel": "Fuel Level",
+      "engine_temp": "Engine Temp",
+      "hydraulic_pressure": "Hydraulic Pressure",
+      "load_weight": "Load Weight",
+      "tilt_angle": "Tilt Angle",
+      "operating_hours": "Operating Hours"
+    },
+    "units": {
+      "percent": "%",
+      "celsius": "°C",
+      "psi": "PSI",
+      "tons": "tons",
+      "degrees": "°",
+      "hours": "hrs"
+    },
+    "alerts": {
+      "title": "Safety Alerts",
+      "engine_overheat": "Engine temperature critical - Stop operation immediately",
+      "hydraulic_low": "Low hydraulic pressure detected",
+      "overload": "Load weight exceeds safe limits",
+      "maintenance_due": "Scheduled maintenance due in 2 hours"
+    },
+    "terrain": {
+      "title": "Terrain Analysis",
+      "current": "Current: Soft soil detected",
+      "suggestion": "Reduce speed and avoid sharp turns"
+    }
+  },
+  "inspection": {
+    "title": "Pre-Operation Inspection",
+    "subtitle": "Complete all checks before starting operation",
+    "sections": {
+      "tires": "Tires & Tracks",
+      "hydraulics": "Hydraulic System",
+      "engine": "Engine & Oil",
+      "fuel": "Fuel System",
+      "electrical": "Electrical System"
+    },
+    "checks": {
+      "tire_pressure": "Check tire pressure and tread",
+      "tire_damage": "Inspect for cuts or damage",
+      "hydraulic_fluid": "Check hydraulic fluid level",
+      "hydraulic_leaks": "Inspect for hydraulic leaks",
+      "oil_level": "Check engine oil level",
+      "coolant_level": "Check coolant level",
+      "fuel_level": "Verify fuel level",
+      "fuel_leaks": "Check for fuel leaks",
+      "battery": "Check battery connections",
+      "lights": "Test all lights and indicators"
+    },
+    "actions": {
+      "pass": "Pass",
+      "fail": "Fail",
+      "add_note": "Add Note",
+      "take_photo": "Take Photo",
+      "voice_memo": "Voice Memo",
+      "next_section": "Next Section",
+      "complete": "Complete Inspection",
+      "start_voice_guide": "Start Voice Guide"
+    },
+    "status": {
+      "not_started": "Not Started",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "failed": "Failed"
+    }
+  },
+  "jobs": {
+    "title": "Today's Job Briefing",
+    "subtitle": "Assigned tasks and locations",
+    "status": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed"
+    },
+    "details": {
+      "location": "Location",
+      "eta": "ETA",
+      "priority": "Priority",
+      "load_type": "Load Type",
+      "destination": "Destination"
+    },
+    "actions": {
+      "start_job": "Start Job",
+      "view_map": "View Map",
+      "complete_job": "Complete Job"
+    }
+  },
+  "voice": {
+    "listening": "Listening...",
+    "not_supported": "Voice recognition not supported",
+    "commands": {
+      "dashboard": "Go to dashboard",
+      "inspection": "Start inspection",
+      "jobs": "Show jobs",
+      "read_aloud": "Read this page"
+    }
+  },
+  "offline": {
+    "indicator": "Offline Mode - Limited functionality available"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error occurred",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close"
+  }
+}
