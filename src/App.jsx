@@ -18,7 +18,7 @@ function App() {
         <PredictionForm setPrediction={setPrediction} />
         {prediction && (
           <section className="result-section mt-8 bg-gray-800 text-yellow-300 p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-3">Estimated Duration: {prediction} hourss</h2>
+            <h2 className="text-2xl font-bold mb-3">Estimated Duration: {prediction} hours</h2>
             <h3 className="text-xl mb-2 font-semibold">🔧 Suggestions to Reduce Time:</h3>
             <ul className="list-disc list-inside space-y-2">
               <li>Use automated or semi-automated equipment.</li>
