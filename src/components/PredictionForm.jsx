@@ -32,7 +32,7 @@ const fields = [
   },
   {
     name: "area_of_work",
-    label: "Area of Work (m²)",
+    label: "Area of Work (km²)",
     icon: <FaRulerCombined />,
     type: "number",
     info: "Total area of the site being worked on.",
@@ -47,7 +47,7 @@ const fields = [
   },
   {
     name: "labour_working_hours",
-    label: "Labour Working Hours",
+    label: "Labour Working Hours/day",
     icon: <FaClock />,
     type: "number",
     info: "Total labor hours scheduled for the task.",
