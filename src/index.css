@@ -220,4 +220,67 @@ body.light-mode .mode-toggle:hover {
   background-color: var(--cat-yellow);
   color: var(--cat-black);
 }
+.form-container {
+  background-color: var(--cat-yellow);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+  margin: 0 auto;
+  color: var(--cat-black);
+}
+
+.field-label {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.custom-input,
+.custom-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 2px solid var(--cat-black);
+  font-size: 1rem;
+  background-color: var(--cat-white);
+  color: var(--cat-black);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+  appearance: none;
+  background-image: none;
+}
+
+.custom-select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='16' height='16' fill='black' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+}
+
+.custom-input:focus,
+.custom-select:focus {
+  outline: none;
+  border-color: var(--cat-black);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn {
+  background-color: var(--cat-black);
+  color: var(--cat-yellow);
+  font-weight: bold;
+  padding: 0.9rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  background-color: var(--cat-yellow);
+  color: var(--cat-black);
+  transform: scale(1.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
 
