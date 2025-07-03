@@ -27,7 +27,7 @@ const fields = [
     label: "Crew Size",
     icon: <FaUsers />,
     type: "number",
-    placeholder: "e.g. 5",
+    placeholder: "Enter number of crew members",
     info: "Number of workers involved in the task.",
   },
   {
@@ -35,6 +35,7 @@ const fields = [
     label: "Area of Work (km²)",
     icon: <FaRulerCombined />,
     type: "number",
+    placeholder: "e.g. 1.5",
     info: "Total area of the site being worked on.",
   },
   {
@@ -50,6 +51,7 @@ const fields = [
     label: "Labour Working Hours/day",
     icon: <FaClock />,
     type: "number",
+    placeholder: "e.g. 8",
     info: "Total labor hours scheduled for the task.",
   },
   {
@@ -65,6 +67,7 @@ const fields = [
     label: "Temperature (°C)",
     icon: <FaThermometerHalf />,
     type: "number",
+    placeholder: "e.g. 28",
     info: "Temperature at the site during work.",
   },
   {
@@ -72,9 +75,11 @@ const fields = [
     label: "Site Elevation (m)",
     icon: <FaGlobeAmericas />,
     type: "number",
+    placeholder: "e.g. 300",
     info: "Height of the site above sea level.",
   },
 ];
+
 
 export default function PredictionForm({ setPrediction }) {
   const [formData, setFormData] = useState({
