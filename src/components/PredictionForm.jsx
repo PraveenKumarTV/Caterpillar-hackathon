@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaHardHat,
   FaUsers,
@@ -9,7 +9,8 @@ import {
   FaClock,
   FaMountain,
   FaThermometerHalf,
-  FaGlobeAmericas
+  FaGlobeAmericas,
+  FaEye,
 } from "react-icons/fa";
 
 const fields = [
@@ -19,6 +20,7 @@ const fields = [
     icon: <FaHardHat />,
     type: "select",
     options: ["Excavation", "Electrical", "Masonry"],
+    info: "Select the type of construction task being performed.",
   },
   {
     name: "crew_size",
@@ -26,12 +28,14 @@ const fields = [
     icon: <FaUsers />,
     type: "number",
     placeholder: "e.g. 5",
+    info: "Number of workers involved in the task.",
   },
   {
     name: "area_of_work",
     label: "Area of Work (m²)",
     icon: <FaRulerCombined />,
     type: "number",
+    info: "Total area of the site being worked on.",
   },
   {
     name: "equipment_type",
@@ -39,12 +43,14 @@ const fields = [
     icon: <FaTruckMoving />,
     type: "select",
     options: ["Excavator", "Crane", "Hand-tools"],
+    info: "Select the primary equipment used.",
   },
   {
     name: "labour_working_hours",
     label: "Labour Working Hours",
     icon: <FaClock />,
     type: "number",
+    info: "Total labor hours scheduled for the task.",
   },
   {
     name: "soil_type",
@@ -52,18 +58,21 @@ const fields = [
     icon: <FaMountain />,
     type: "select",
     options: ["Clay", "Loamy", "Rocky", "Sandy"],
+    info: "Select the soil type of the site.",
   },
   {
     name: "temperature",
     label: "Temperature (°C)",
     icon: <FaThermometerHalf />,
     type: "number",
+    info: "Temperature at the site during work.",
   },
   {
     name: "sea_level",
     label: "Site Elevation (m)",
     icon: <FaGlobeAmericas />,
     type: "number",
+    info: "Height of the site above sea level.",
   },
 ];
 
@@ -80,9 +89,12 @@ export default function PredictionForm({ setPrediction }) {
   });
 
   const [loading, setLoading] = useState(false);
+  const [tooltip, setTooltip] = useState({ visible: false, field: null, x: 0, y: 0 });
+  const iconRefs = useRef({});
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,62 +110,125 @@ export default function PredictionForm({ setPrediction }) {
     }
   };
 
+  const toggleTooltip = (fieldName) => {
+    const icon = iconRefs.current[fieldName];
+    if (!icon) return;
+
+    const rect = icon.getBoundingClientRect();
+    const offsetX = 10;
+    const offsetY = 10;
+
+    if (tooltip.visible && tooltip.field === fieldName) {
+      setTooltip({ visible: false, field: null, x: 0, y: 0 });
+    } else {
+      setTooltip({
+        visible: true,
+        field: fieldName,
+        x: rect.right + offsetX + window.scrollX,
+        y: rect.top + offsetY + window.scrollY,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (tooltip.visible && tooltip.field) {
+        toggleTooltip(tooltip.field); // re-trigger to update position
+      }
+    };
+    window.addEventListener("scroll", handleScroll, true);
+    return () => window.removeEventListener("scroll", handleScroll, true);
+  }, [tooltip]);
+
   return (
     <motion.div
-      className="form-container"
+      className="form-container relative"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {fields.map(({ name, label, type, placeholder, options, icon }) => (
-          <motion.div
-            key={name}
-            className="flex flex-col"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+      <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+        {fields.reduce((rows, field, index) => {
+  if (index % 2 === 0) {
+    rows.push([field]);
+  } else {
+    rows[rows.length - 1].push(field);
+  }
+  return rows;
+}, []).map((pair, rowIndex) => (
+  <div key={rowIndex} className="form-row">
+    {pair.map(({ name, label, type, placeholder, options, icon, info }) => (
+      <motion.div
+        key={name}
+        className="form-field"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        <div className="flex items-center justify-between mb-1">
+          <label className="font-semibold flex items-center gap-2">
+            {icon} {label}
+            <button
+              type="button"
+              ref={(el) => (iconRefs.current[name] = el)}
+              className="eye-icon ml-2"
+              onClick={() => toggleTooltip(name)}
+            >
+              <FaEye />
+            </button>
+          </label>
+        </div>
+
+        {type === "select" ? (
+          <select
+            name={name}
+            value={formData[name]}
+            onChange={handleChange}
+            className="custom-select"
+            required
           >
-            <label className="field-label">
-              <span className="inline-flex items-center gap-2">
-                {icon} {label}
-              </span>
-            </label>
+            <option value="" disabled>
+              Select {label}
+            </option>
+            {options.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            name={name}
+            type={type}
+            value={formData[name]}
+            onChange={handleChange}
+            placeholder={placeholder}
+            className="custom-input"
+            required
+          />
+        )}
 
-            {type === "select" ? (
-              <select
-                name={name}
-                value={formData[name]}
-                onChange={handleChange}
-                className="custom-select"
-                required
-              >
-                <option value="" disabled>
-                  Select {label}
-                </option>
-                {options.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <input
-                name={name}
-                type={type}
-                value={formData[name]}
-                onChange={handleChange}
-                placeholder={placeholder}
-                className="custom-input"
-                required
-              />
-            )}
-          </motion.div>
-        ))}
-
-        <button type="submit" className="submit-btn">
-          {loading ? "Estimating..." : "Predict Duration"}
-        </button>
+        <AnimatePresence>
+          {tooltip.visible && tooltip.field === name && (
+            <motion.div
+              className="info-tooltip fixed"
+              style={{ top: tooltip.y, left: tooltip.x }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.2 }}
+            >
+              {info}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    ))}
+  </div>
+))}
+<button type="submit" className="submit-btn">
+    {loading ? "Estimating..." : "Predict Duration"}
+  </button>
       </form>
     </motion.div>
   );

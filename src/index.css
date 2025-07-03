@@ -283,4 +283,54 @@ body.light-mode .mode-toggle:hover {
   transform: scale(1.02);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
+.eye-icon {
+  background: none;
+  border: none;
+  padding: 0.2rem;
+  margin-left: 0.4rem;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--cat-black);
+  transition: transform 0.2s ease;
+}
+
+.eye-icon:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: scale(1.1);
+}
+
+.info-tooltip {
+  position: absolute;
+  top: 2.5rem;
+  right: 2rem;
+  z-index: 30;
+  background-color: #fffbea;
+  color: #1a1a1a;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  max-width: 280px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-left: 4px solid var(--cat-yellow);
+}
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.form-field {
+  flex: 0 0 48%;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .form-field {
+    flex: 0 0 100%;
+  }
+}
 
