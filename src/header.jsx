@@ -1,3 +1,4 @@
+import { FaSun, FaMoon } from 'react-icons/fa';
 import caterpillarLogo from '/caterpillar_logo.png';
 
 export default function Header({ darkMode, toggleDarkMode }) {
@@ -17,7 +18,7 @@ export default function Header({ darkMode, toggleDarkMode }) {
             : 'bg-black text-yellow-400 hover:bg-yellow-600 border-black'
           }`}
       >
-        {darkMode ? '☀️' : '🌙'}
+        {darkMode ? <FaSun /> : <FaMoon />}
       </button>
     </header>
   );
