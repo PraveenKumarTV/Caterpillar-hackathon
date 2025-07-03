@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+:root {
+  --cat-yellow: #ffcc00;
+  --cat-black: #000000;
+  --cat-white: #ffffff;
+  --cat-gray: #f2f2f2;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--cat-black);
+  color: var(--cat-white);
+  transition: all 0.3s ease;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+header,
+footer {
+  width: 100%;
+}
+
+header {
+  background-color: var(--cat-black);
+  color: var(--cat-yellow);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+header img {
+  height: 40px;
+}
+
+header h1 {
+  font-size: 1.8rem;
+}
+
+footer {
+  background-color: var(--cat-black);
+  color: var(--cat-yellow);
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  margin-top: auto;
+  box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.1);
+}
+
+main {
+  padding: 2rem;
+}
+
+/* FORM STYLES */
+form {
+  background-color: var(--cat-yellow);
+  color: var(--cat-black);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+form label {
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: block;
+}
+
+form input {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 5px;
+  border: 1px solid var(--cat-black);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease;
+}
+
+form input:focus {
+  outline: none;
+  border-color: var(--cat-black);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+form button {
+  background-color: var(--cat-black);
+  color: var(--cat-yellow);
+  font-weight: bold;
+  padding: 0.8rem 2rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  width: 100%;
+}
+
+form button:hover {
+  background-color: var(--cat-yellow);
+  color: var(--cat-black);
+  transform: scale(1.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.result {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--cat-yellow);
+}
+
+/* DARK MODE SUPPORT */
+body.light-mode {
+  background-color: var(--cat-white);
+  color: var(--cat-black);
+}
+
+body.light-mode form {
+  background-color: var(--cat-gray);
+  color: var(--cat-black);
+}
+
+body.light-mode form input,
+body.light-mode form button {
+  border-color: var(--cat-black);
+}
+
+body.light-mode header,
+body.light-mode footer {
+  background-color: var(--cat-yellow);
+  color: var(--cat-black);
+}
+
+@media (max-width: 768px) {
+  form {
+    padding: 1rem;
+  }
+
+  header h1 {
+    font-size: 1.2rem;
+  }
+
+  form input {
+    padding: 0.6rem;
+  }
+
+  form button {
+    padding: 0.6rem 1rem;
+  }
+}
+body.dark-mode {
+  background-color: var(--cat-black);
+  color: var(--cat-white);
+}
+
+body.light-mode {
+  background-color: var(--cat-white);
+  color: var(--cat-black);
+}
+
+body.light-mode form {
+  background-color: var(--cat-gray);
+  color: var(--cat-black);
+}
+
+.result-section {
+  background-color: #1a1a1a;
+  color: var(--cat-yellow);
+  border-left: 5px solid var(--cat-yellow);
+  padding: 2rem;
+  margin-top: 2rem;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+}
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .mode-toggle {
+  background-color: var(--cat-yellow);
+  color: var(--cat-black);
+  border-color: var(--cat-yellow);
+}
+
+body.dark-mode .mode-toggle:hover {
+  background-color: var(--cat-white);
+  color: var(--cat-black);
+}
+
+body.light-mode .mode-toggle {
+  background-color: var(--cat-black);
+  color: var(--cat-yellow);
+  border-color: var(--cat-black);
+}
+
+body.light-mode .mode-toggle:hover {
+  background-color: var(--cat-yellow);
+  color: var(--cat-black);
+}
+
