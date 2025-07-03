@@ -3,12 +3,12 @@ import axios from "axios";
 import { motion } from "framer-motion";
 
 const fields = [
-  { name: "task_type", label: "Task Type", type: "text", placeholder: "e.g. excavation" },
+  { name: "task_type", label: "Task Type", type: "select", options:["Excavation","Electrical" , "Masonry"] },
   { name: "crew_size", label: "Crew Size", type: "number", placeholder: "e.g. 5" },
   { name: "area_of_work", label: "Area of Work (m²)", type: "number" },
-  { name: "equipment_type", label: "Equipment Type", type: "text", placeholder: "e.g. crane" },
+  { name: "equipment_type", label: "Equipment Type", type: "select", options:["Excavator","Crane","Hand-tools"] },
   { name: "labour_working_hours", label: "Labour Working Hours", type: "number" },
-  { name: "soil_type", label: "Soil Type", type: "text", placeholder: "e.g. clay" },
+  { name: "soil_type", label: "Soil Type", type: "select", options:["Clay","Loamy","Rocky", "Sandy"] },
   { name: "temperature", label: "Temperature (°C)", type: "number" },
   { name: "sea_level", label: "Site Elevation (m)", type: "number" }
 ];
@@ -52,26 +52,45 @@ export default function PredictionForm({ setPrediction }) {
       transition={{ duration: 0.5 }}
     >
       <form onSubmit={handleSubmit} className="space-y-6">
-        {fields.map(({ name, label, type, placeholder }) => (
-          <motion.div
-            key={name}
-            className="flex flex-col"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <label className="font-semibold mb-1">{label}</label>
-            <input
-              name={name}
-              type={type}
-              value={formData[name]}
-              onChange={handleChange}
-              placeholder={placeholder}
-              className="p-3 rounded border border-black focus:outline-none focus:ring-2 focus:ring-black transition-all"
-              required
-            />
-          </motion.div>
+        {fields.map(({ name, label, type, placeholder, options }) => (
+  <motion.div
+    key={name}
+    className="flex flex-col"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.1 }}
+  >
+    <label className="font-semibold mb-1">{label}</label>
+
+    {type === "select" ? (
+      <select
+        name={name}
+        value={formData[name]}
+        onChange={handleChange}
+        className="p-3 rounded border border-black focus:outline-none focus:ring-2 focus:ring-black transition-all"
+        required
+      >
+        <option value="" disabled>Select {label}</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
         ))}
+      </select>
+    ) : (
+      <input
+        name={name}
+        type={type}
+        value={formData[name]}
+        onChange={handleChange}
+        placeholder={placeholder}
+        className="p-3 rounded border border-black focus:outline-none focus:ring-2 focus:ring-black transition-all"
+        required
+      />
+    )}
+  </motion.div>
+))}
+
 
         <button
           type="submit"
