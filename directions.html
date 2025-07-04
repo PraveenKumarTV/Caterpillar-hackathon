@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Realistic Excavator Navigator</title>
+  <meta charset="utf-8" />
+  <style>
+    #map { height: 100vh; }
+    .instructions {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 1.1em;
+      z-index: 999;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
+</head>
+<body>
+
+<div id="map"></div>
+<div class="instructions" id="instructions">🔄 Waiting for GPS...</div>
+
+<script>
+  const instructionsBox = document.getElementById("instructions");
+  let map = L.map('map').setView([9.9210, 78.0967], 18);
+
+  // Tile layer (you can switch to satellite if needed)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 22
+  }).addTo(map);
+
+  // Destination
+  const destination = L.latLng(9.92091138132578, 78.0967370749451); // Update as needed
+
+  let routingControl = null;
+  let marker = null;
+
+  navigator.geolocation.watchPosition(position => {
+    const latlng = L.latLng(position.coords.latitude, position.coords.longitude);
+
+    if (!marker) {
+      marker = L.circleMarker(latlng, {
+        radius: 8,
+        color: 'blue',
+        fillColor: 'blue',
+        fillOpacity: 0.9
+      }).addTo(map);
+    } else {
+      marker.setLatLng(latlng);
+    }
+
+    map.setView(latlng);
+
+    if (!routingControl) {
+      // Initialize routing
+      routingControl = L.Routing.control({
+        waypoints: [latlng, destination],
+        createMarker: () => null,
+        show: false,
+        addWaypoints: false,
+        routeWhileDragging: false
+      }).addTo(map);
+
+      routingControl.on('routesfound', function (e) {
+        const route = e.routes[0];
+        const instructions = route.instructions || route.summary || [];
+
+        instructionsBox.innerText = "📍 Navigation Started";
+      });
+    }
+
+    // Recalculate instructions on movement
+    if (routingControl && routingControl._routes && routingControl._routes[0]) {
+      const steps = routingControl._routes[0].instructions || routingControl._routes[0].summary || [];
+      const nextStep = routingControl._routes[0].coordinates.find(coord => {
+        return latlng.distanceTo(L.latLng(coord.lat, coord.lng)) > 5;
+      });
+
+      if (nextStep) {
+        const dist = latlng.distanceTo(L.latLng(nextStep.lat, nextStep.lng));
+        const direction = getDirectionAngle(latlng, nextStep);
+        instructionsBox.innerText = `➡️ ${Math.round(dist)}m ahead`;
+
+        drawArrow(latlng, nextStep, direction);
+      }
+    }
+
+  }, err => {
+    instructionsBox.innerText = "⚠️ GPS error: " + err.message;
+  }, {
+    enableHighAccuracy: true,
+    timeout: 10000,
+    maximumAge: 1000
+  });
+
+  // Draw direction arrow
+  let arrowMarker = null;
+  function drawArrow(from, to, angle) {
+    if (arrowMarker) {
+      map.removeLayer(arrowMarker);
+    }
+
+    arrowMarker = L.divIcon({
+      html: '➤',
+      className: '',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
+    });
+
+    const marker = L.marker(from, { icon: arrowMarker }).addTo(map);
+    marker.getElement().style.transform += ` rotate(${angle}deg)`;
+  }
+
+  function getDirectionAngle(from, to) {
+    const dy = to.lat - from.lat;
+    const dx = to.lng - from.lng;
+    const theta = Math.atan2(dy, dx);
+    return theta * 180 / Math.PI;
+  }
+
+const destMarker = L.marker(destination, {
+  icon: L.divIcon({
+    className: 'custom-destination',
+    html: '🚧',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32]
+  })
+}).addTo(map).bindPopup("Dig Site Destination");
+
+</script>
+
+</body>
+</html>

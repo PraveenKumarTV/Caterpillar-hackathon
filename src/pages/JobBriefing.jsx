@@ -3,6 +3,7 @@ import { Row, Col, Card, Button, Badge, Modal } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useTTS } from '../contexts/TTSContext'
 import { useOffline } from '../contexts/OfflineContext'
+import MapNavigator from '../components/MapNavigator'
 
 const JobBriefing = () => {
   const { t } = useTranslation()
@@ -24,7 +25,7 @@ const JobBriefing = () => {
       loadType: 'Limestone',
       estimatedWeight: '25 tons',
       description: 'Transport limestone from excavation site to processing plant',
-      coordinates: { lat: 40.7128, lng: -74.0060 }
+      coordinates: { lat: 9.9210, lng: 78.0967 }
     },
     {
       id: 2,
@@ -37,7 +38,7 @@ const JobBriefing = () => {
       loadType: 'Maintenance Equipment',
       estimatedWeight: '8 tons',
       description: 'Transport maintenance equipment to field station',
-      coordinates: { lat: 40.7589, lng: -73.9851 }
+      coordinates: { lat: 9.9215, lng: 78.0970 }
     },
     {
       id: 3,
@@ -50,7 +51,7 @@ const JobBriefing = () => {
       loadType: 'Gravel Mix',
       estimatedWeight: '30 tons',
       description: 'Deliver gravel mix to construction site',
-      coordinates: { lat: 40.7505, lng: -73.9934 }
+      coordinates: { lat: 9.9205, lng: 78.0965 }
     },
     {
       id: 4,
@@ -63,7 +64,33 @@ const JobBriefing = () => {
       loadType: 'Concrete Debris',
       estimatedWeight: '22 tons',
       description: 'Remove concrete debris from demolition site',
-      coordinates: { lat: 40.7282, lng: -74.0776 }
+      coordinates: { lat: 9.9200, lng: 78.0975 }
+    },
+    {
+      id: 5,
+      title: 'Sand Transport',
+      location: 'Riverside Quarry',
+      destination: 'Concrete Plant',
+      status: 'pending',
+      priority: 'medium',
+      eta: '04:00 PM',
+      loadType: 'Fine Sand',
+      estimatedWeight: '18 tons',
+      description: 'Transport fine sand for concrete production',
+      coordinates: { lat: 9.9220, lng: 78.0960 }
+    },
+    {
+      id: 6,
+      title: 'Rock Crushing Site',
+      location: 'Mountain Quarry A',
+      destination: 'Storage Facility B',
+      status: 'pending',
+      priority: 'low',
+      eta: '05:30 PM',
+      loadType: 'Crushed Rock',
+      estimatedWeight: '35 tons',
+      description: 'Move crushed rock to storage facility',
+      coordinates: { lat: 9.9225, lng: 78.0955 }
     }
   ])
 
@@ -116,7 +143,7 @@ const JobBriefing = () => {
   const showMap = (job) => {
     setSelectedJob(job)
     setShowMapModal(true)
-    speak(`Showing map for ${job.title}`)
+    speak(`Starting navigation to ${job.title}`)
   }
 
   const readJobSummary = () => {
@@ -236,10 +263,16 @@ const JobBriefing = () => {
                     <span className="ms-2">{job.loadType}</span>
                   </div>
                   
-                  <div className="d-flex align-items-center">
+                  <div className="d-flex align-items-center mb-2">
                     <i className="bi bi-speedometer text-secondary me-2"></i>
                     <strong>Weight:</strong>
                     <span className="ms-2">{job.estimatedWeight}</span>
+                  </div>
+
+                  <div className="d-flex align-items-center">
+                    <i className="bi bi-geo text-primary me-2"></i>
+                    <strong>Coordinates:</strong>
+                    <span className="ms-2 small">{job.coordinates.lat.toFixed(4)}, {job.coordinates.lng.toFixed(4)}</span>
                   </div>
                 </div>
                 
@@ -277,15 +310,15 @@ const JobBriefing = () => {
                   )}
                   
                   <Button
-                    variant="outline-primary"
+                    variant="primary"
                     size="lg"
                     onClick={(e) => {
                       e.stopPropagation()
                       showMap(job)
                     }}
                   >
-                    <i className="bi bi-map me-2"></i>
-                    {t('jobs.actions.view_map')}
+                    <i className="bi bi-navigation me-2"></i>
+                    Start Navigation
                   </Button>
                 </div>
               </Card.Footer>
@@ -294,51 +327,15 @@ const JobBriefing = () => {
         ))}
       </Row>
 
-      {/* Map Modal */}
-      <Modal show={showMapModal} onHide={() => setShowMapModal(false)} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <i className="bi bi-map me-2"></i>
-            Job Location Map
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedJob && (
-            <div>
-              <div className="mb-3">
-                <h5>{selectedJob.title}</h5>
-                <p className="text-muted">{selectedJob.description}</p>
-              </div>
-              
-              <div className="bg-light p-4 rounded text-center" style={{ minHeight: '300px' }}>
-                <i className="bi bi-map" style={{ fontSize: '64px', color: '#ccc' }}></i>
-                <h4 className="mt-3 text-muted">Interactive Map</h4>
-                <p className="text-muted">
-                  Map integration would show route from<br/>
-                  <strong>{selectedJob.location}</strong><br/>
-                  to<br/>
-                  <strong>{selectedJob.destination}</strong>
-                </p>
-                <div className="mt-3">
-                  <Badge bg="info" className="me-2">GPS Coordinates</Badge>
-                  <small className="text-muted">
-                    {selectedJob.coordinates.lat}, {selectedJob.coordinates.lng}
-                  </small>
-                </div>
-              </div>
-            </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowMapModal(false)}>
-            {t('common.close')}
-          </Button>
-          <Button variant="primary" onClick={() => speak('Navigation feature not implemented')}>
-            <i className="bi bi-navigation me-2"></i>
-            Start Navigation
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* Map Navigation Modal */}
+      {selectedJob && (
+        <MapNavigator
+          show={showMapModal}
+          onHide={() => setShowMapModal(false)}
+          destination={selectedJob.coordinates}
+          jobTitle={selectedJob.title}
+        />
+      )}
     </main>
   )
 }

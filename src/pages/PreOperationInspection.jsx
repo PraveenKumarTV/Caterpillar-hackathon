@@ -1,380 +1,343 @@
 import React, { useState, useEffect } from 'react'
-import { Row, Col, Card, Button, Form, Alert, ProgressBar, Modal } from 'react-bootstrap'
+import { Row, Col, Card, Button, Badge, Modal } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useTTS } from '../contexts/TTSContext'
 import { useOffline } from '../contexts/OfflineContext'
+import MapNavigator from '../components/MapNavigator'
 
-const PreOperationInspection = () => {
+const JobBriefing = () => {
   const { t } = useTranslation()
   const { speak } = useTTS()
   const { saveOfflineData } = useOffline()
   
-  const [currentSection, setCurrentSection] = useState(0)
-  const [showNoteModal, setShowNoteModal] = useState(false)
-  const [currentNote, setCurrentNote] = useState('')
-  const [voiceGuideActive, setVoiceGuideActive] = useState(false)
+  const [selectedJob, setSelectedJob] = useState(null)
+  const [showMapModal, setShowMapModal] = useState(false)
 
-  const sections = [
+  const [jobs, setJobs] = useState([
     {
-      id: 'tires',
-      title: t('inspection.sections.tires'),
-      icon: 'bi-circle',
-      checks: [
-        { id: 'tire_pressure', text: t('inspection.checks.tire_pressure') },
-        { id: 'tire_damage', text: t('inspection.checks.tire_damage') }
-      ]
+      id: 1,
+      title: 'Excavation Site A - Load Transport',
+      location: 'North Quarry Section 3',
+      destination: 'Processing Plant B',
+      status: 'pending',
+      priority: 'high',
+      eta: '08:30 AM',
+      loadType: 'Limestone',
+      estimatedWeight: '25 tons',
+      description: 'Transport limestone from excavation site to processing plant',
+      coordinates: { lat: 9.9210, lng: 78.0967 }
     },
     {
-      id: 'hydraulics',
-      title: t('inspection.sections.hydraulics'),
-      icon: 'bi-droplet-fill',
-      checks: [
-        { id: 'hydraulic_fluid', text: t('inspection.checks.hydraulic_fluid') },
-        { id: 'hydraulic_leaks', text: t('inspection.checks.hydraulic_leaks') }
-      ]
+      id: 2,
+      title: 'Equipment Maintenance Area',
+      location: 'Service Bay 2',
+      destination: 'Field Station C',
+      status: 'in_progress',
+      priority: 'medium',
+      eta: '10:15 AM',
+      loadType: 'Maintenance Equipment',
+      estimatedWeight: '8 tons',
+      description: 'Transport maintenance equipment to field station',
+      coordinates: { lat: 9.9215, lng: 78.0970 }
     },
     {
-      id: 'engine',
-      title: t('inspection.sections.engine'),
-      icon: 'bi-gear-fill',
-      checks: [
-        { id: 'oil_level', text: t('inspection.checks.oil_level') },
-        { id: 'coolant_level', text: t('inspection.checks.coolant_level') }
-      ]
+      id: 3,
+      title: 'Aggregate Delivery',
+      location: 'Storage Yard D',
+      destination: 'Construction Site E',
+      status: 'completed',
+      priority: 'low',
+      eta: '02:00 PM',
+      loadType: 'Gravel Mix',
+      estimatedWeight: '30 tons',
+      description: 'Deliver gravel mix to construction site',
+      coordinates: { lat: 9.9205, lng: 78.0965 }
     },
     {
-      id: 'fuel',
-      title: t('inspection.sections.fuel'),
-      icon: 'bi-fuel-pump',
-      checks: [
-        { id: 'fuel_level', text: t('inspection.checks.fuel_level') },
-        { id: 'fuel_leaks', text: t('inspection.checks.fuel_leaks') }
-      ]
+      id: 4,
+      title: 'Waste Material Removal',
+      location: 'Demolition Site F',
+      destination: 'Disposal Facility',
+      status: 'pending',
+      priority: 'high',
+      eta: '03:30 PM',
+      loadType: 'Concrete Debris',
+      estimatedWeight: '22 tons',
+      description: 'Remove concrete debris from demolition site',
+      coordinates: { lat: 9.9200, lng: 78.0975 }
     },
     {
-      id: 'electrical',
-      title: t('inspection.sections.electrical'),
-      icon: 'bi-lightning-fill',
-      checks: [
-        { id: 'battery', text: t('inspection.checks.battery') },
-        { id: 'lights', text: t('inspection.checks.lights') }
-      ]
+      id: 5,
+      title: 'Sand Transport',
+      location: 'Riverside Quarry',
+      destination: 'Concrete Plant',
+      status: 'pending',
+      priority: 'medium',
+      eta: '04:00 PM',
+      loadType: 'Fine Sand',
+      estimatedWeight: '18 tons',
+      description: 'Transport fine sand for concrete production',
+      coordinates: { lat: 9.9220, lng: 78.0960 }
+    },
+    {
+      id: 6,
+      title: 'Rock Crushing Site',
+      location: 'Mountain Quarry A',
+      destination: 'Storage Facility B',
+      status: 'pending',
+      priority: 'low',
+      eta: '05:30 PM',
+      loadType: 'Crushed Rock',
+      estimatedWeight: '35 tons',
+      description: 'Move crushed rock to storage facility',
+      coordinates: { lat: 9.9225, lng: 78.0955 }
     }
-  ]
+  ])
 
-  const [inspectionData, setInspectionData] = useState(() => {
-    const initialData = {}
-    sections.forEach(section => {
-      section.checks.forEach(check => {
-        initialData[check.id] = {
-          status: 'not_started',
-          note: '',
-          timestamp: null
-        }
-      })
-    })
-    return initialData
-  })
-
-  const currentSectionData = sections[currentSection]
-  const totalChecks = sections.reduce((total, section) => total + section.checks.length, 0)
-  const completedChecks = Object.values(inspectionData).filter(
-    item => item.status === 'completed' || item.status === 'failed'
-  ).length
-  const progress = (completedChecks / totalChecks) * 100
-
-  const handleCheckResult = (checkId, status) => {
-    setInspectionData(prev => ({
-      ...prev,
-      [checkId]: {
-        ...prev[checkId],
-        status,
-        timestamp: new Date().toISOString()
-      }
-    }))
-
-    // Save offline
-    saveOfflineData('inspection_current', {
-      ...inspectionData,
-      [checkId]: {
-        ...inspectionData[checkId],
-        status,
-        timestamp: new Date().toISOString()
-      }
-    })
-
-    // Voice feedback
-    const statusText = status === 'completed' ? 'passed' : 'failed'
-    speak(`Check ${statusText}`)
-  }
-
-  const handleAddNote = (checkId) => {
-    setCurrentNote(inspectionData[checkId]?.note || '')
-    setShowNoteModal(checkId)
-  }
-
-  const saveNote = () => {
-    if (showNoteModal) {
-      setInspectionData(prev => ({
-        ...prev,
-        [showNoteModal]: {
-          ...prev[showNoteModal],
-          note: currentNote
-        }
-      }))
-    }
-    setShowNoteModal(false)
-    setCurrentNote('')
-  }
-
-  const nextSection = () => {
-    if (currentSection < sections.length - 1) {
-      setCurrentSection(currentSection + 1)
-      speak(sections[currentSection + 1].title)
+  const getStatusVariant = (status) => {
+    switch (status) {
+      case 'completed': return 'success'
+      case 'in_progress': return 'warning'
+      case 'pending': return 'secondary'
+      default: return 'secondary'
     }
   }
 
-  const previousSection = () => {
-    if (currentSection > 0) {
-      setCurrentSection(currentSection - 1)
-      speak(sections[currentSection - 1].title)
+  const getPriorityVariant = (priority) => {
+    switch (priority) {
+      case 'high': return 'danger'
+      case 'medium': return 'warning'
+      case 'low': return 'info'
+      default: return 'secondary'
     }
   }
 
-  const startVoiceGuide = () => {
-    setVoiceGuideActive(true)
-    speak(`Starting voice guided inspection. Section: ${currentSectionData.title}`)
+  const handleJobAction = async (jobId, action) => {
+    const job = jobs.find(j => j.id === jobId)
     
-    // Guide through each check
-    currentSectionData.checks.forEach((check, index) => {
-      setTimeout(() => {
-        speak(check.text)
-      }, (index + 1) * 3000)
+    if (action === 'start') {
+      setJobs(prev => prev.map(j => 
+        j.id === jobId ? { ...j, status: 'in_progress' } : j
+      ))
+      speak(`Started job: ${job.title}`)
+    } else if (action === 'complete') {
+      setJobs(prev => prev.map(j => 
+        j.id === jobId ? { ...j, status: 'completed' } : j
+      ))
+      speak(`Completed job: ${job.title}`)
+    }
+
+    // Save job update offline
+    await saveOfflineData('jobUpdates', {
+      jobId,
+      action,
+      timestamp: new Date().toISOString()
     })
   }
 
-  const completeInspection = async () => {
-    const completionData = {
-      timestamp: new Date().toISOString(),
-      sections: inspectionData,
-      overallStatus: Object.values(inspectionData).some(item => item.status === 'failed') ? 'failed' : 'passed'
-    }
+  const handleJobClick = (job) => {
+    setSelectedJob(job)
+    speak(`Job details: ${job.title}. Location: ${job.location}. Destination: ${job.destination}. Load type: ${job.loadType}. Priority: ${job.priority}`)
+  }
+
+  const showMap = (job) => {
+    setSelectedJob(job)
+    setShowMapModal(true)
+    speak(`Starting navigation to ${job.title}`)
+  }
+
+  const readJobSummary = () => {
+    const pendingJobs = jobs.filter(job => job.status === 'pending').length
+    const inProgressJobs = jobs.filter(job => job.status === 'in_progress').length
+    const completedJobs = jobs.filter(job => job.status === 'completed').length
     
-    await saveOfflineData('inspection_completed', completionData)
-    speak('Inspection completed and saved')
+    const summary = `
+      Job briefing summary: 
+      ${pendingJobs} pending jobs, 
+      ${inProgressJobs} jobs in progress, 
+      ${completedJobs} completed jobs.
+      Next priority job: ${jobs.find(job => job.status === 'pending' && job.priority === 'high')?.title || 'None'}
+    `
+    speak(summary)
   }
 
   useEffect(() => {
-    speak(`${t('inspection.title')}. Section ${currentSection + 1} of ${sections.length}: ${currentSectionData.title}`)
-  }, [currentSection])
+    speak(t('jobs.title'))
+  }, [])
 
   return (
     <main>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h1 className="text-warning mb-1">{t('inspection.title')}</h1>
-          <p className="text-muted mb-0">{t('inspection.subtitle')}</p>
+          <h1 className="text-warning mb-1">{t('jobs.title')}</h1>
+          <p className="text-muted mb-0">{t('jobs.subtitle')}</p>
         </div>
-        <Button variant="outline-warning" onClick={startVoiceGuide}>
+        <Button variant="outline-warning" onClick={readJobSummary}>
           <i className="bi bi-volume-up me-2"></i>
-          {t('inspection.actions.start_voice_guide')}
+          Read Summary
         </Button>
       </div>
 
-      {/* Progress Bar */}
-      <Card className="mb-4">
-        <Card.Body>
-          <div className="d-flex justify-content-between align-items-center mb-2">
-            <span>Progress: {completedChecks}/{totalChecks} checks</span>
-            <span>{Math.round(progress)}%</span>
-          </div>
-          <ProgressBar 
-            now={progress} 
-            variant={progress === 100 ? 'success' : 'warning'}
-            style={{ height: '12px' }}
-          />
-        </Card.Body>
-      </Card>
-
-      {/* Section Navigation */}
+      {/* Job Statistics */}
       <Row className="mb-4">
-        <Col>
-          <div className="d-flex justify-content-center flex-wrap gap-2">
-            {sections.map((section, index) => (
-              <Button
-                key={section.id}
-                variant={index === currentSection ? 'warning' : 'outline-secondary'}
-                size="sm"
-                onClick={() => {
-                  setCurrentSection(index)
-                  speak(section.title)
-                }}
-                className="d-flex align-items-center"
-              >
-                <i className={`${section.icon} me-1`}></i>
-                {section.title}
-              </Button>
-            ))}
-          </div>
+        <Col md={3} sm={6} className="mb-3">
+          <Card className="text-center">
+            <Card.Body>
+              <h2 className="text-warning">{jobs.filter(j => j.status === 'pending').length}</h2>
+              <p className="mb-0">{t('jobs.status.pending')}</p>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={3} sm={6} className="mb-3">
+          <Card className="text-center">
+            <Card.Body>
+              <h2 className="text-info">{jobs.filter(j => j.status === 'in_progress').length}</h2>
+              <p className="mb-0">{t('jobs.status.in_progress')}</p>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={3} sm={6} className="mb-3">
+          <Card className="text-center">
+            <Card.Body>
+              <h2 className="text-success">{jobs.filter(j => j.status === 'completed').length}</h2>
+              <p className="mb-0">{t('jobs.status.completed')}</p>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={3} sm={6} className="mb-3">
+          <Card className="text-center">
+            <Card.Body>
+              <h2 className="text-danger">{jobs.filter(j => j.priority === 'high').length}</h2>
+              <p className="mb-0">High Priority</p>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
 
-      {/* Current Section */}
-      <Card className="mb-4">
-        <Card.Header className="d-flex align-items-center">
-          <i className={`${currentSectionData.icon} me-2`}></i>
-          <h3 className="mb-0">{currentSectionData.title}</h3>
-        </Card.Header>
-        <Card.Body>
-          {currentSectionData.checks.map((check) => {
-            const checkData = inspectionData[check.id]
-            const isCompleted = checkData.status === 'completed'
-            const isFailed = checkData.status === 'failed'
-            
-            return (
-              <div 
-                key={check.id} 
-                className={`checklist-item ${isCompleted ? 'completed' : ''} ${isFailed ? 'failed' : ''}`}
-              >
-                <div className="d-flex justify-content-between align-items-start mb-3">
-                  <div className="flex-grow-1">
-                    <h5 className="mb-2">{check.text}</h5>
-                    {checkData.note && (
-                      <div className="text-muted small">
-                        <i className="bi bi-sticky me-1"></i>
-                        {checkData.note}
-                      </div>
-                    )}
+      {/* Job List */}
+      <Row>
+        {jobs.map((job) => (
+          <Col lg={6} key={job.id} className="mb-4">
+            <Card 
+              className="h-100"
+              style={{ 
+                cursor: 'pointer',
+                border: job.priority === 'high' ? '3px solid var(--cat-red)' : undefined
+              }}
+              onClick={() => handleJobClick(job)}
+            >
+              <Card.Header className="d-flex justify-content-between align-items-center">
+                <div className="d-flex align-items-center">
+                  <Badge bg={getStatusVariant(job.status)} className="me-2">
+                    {t(`jobs.status.${job.status}`)}
+                  </Badge>
+                  <Badge bg={getPriorityVariant(job.priority)}>
+                    {job.priority.toUpperCase()}
+                  </Badge>
+                </div>
+                <div className="text-muted">
+                  <i className="bi bi-clock me-1"></i>
+                  {job.eta}
+                </div>
+              </Card.Header>
+              
+              <Card.Body>
+                <h5 className="card-title mb-3">{job.title}</h5>
+                
+                <div className="mb-3">
+                  <div className="d-flex align-items-center mb-2">
+                    <i className="bi bi-geo-alt text-warning me-2"></i>
+                    <strong>{t('jobs.details.location')}:</strong>
+                    <span className="ms-2">{job.location}</span>
                   </div>
+                  
+                  <div className="d-flex align-items-center mb-2">
+                    <i className="bi bi-arrow-right text-info me-2"></i>
+                    <strong>{t('jobs.details.destination')}:</strong>
+                    <span className="ms-2">{job.destination}</span>
+                  </div>
+                  
+                  <div className="d-flex align-items-center mb-2">
+                    <i className="bi bi-box-seam text-success me-2"></i>
+                    <strong>{t('jobs.details.load_type')}:</strong>
+                    <span className="ms-2">{job.loadType}</span>
+                  </div>
+                  
+                  <div className="d-flex align-items-center mb-2">
+                    <i className="bi bi-speedometer text-secondary me-2"></i>
+                    <strong>Weight:</strong>
+                    <span className="ms-2">{job.estimatedWeight}</span>
+                  </div>
+
                   <div className="d-flex align-items-center">
-                    <span className={`status-indicator status-${
-                      isCompleted ? 'ok' : isFailed ? 'danger' : 'pending'
-                    }`}></span>
-                    <span className="ms-2 small text-muted">
-                      {t(`inspection.status.${checkData.status}`)}
-                    </span>
+                    <i className="bi bi-geo text-primary me-2"></i>
+                    <strong>Coordinates:</strong>
+                    <span className="ms-2 small">{job.coordinates.lat.toFixed(4)}, {job.coordinates.lng.toFixed(4)}</span>
                   </div>
                 </div>
                 
+                <p className="text-muted small">{job.description}</p>
+              </Card.Body>
+              
+              <Card.Footer>
                 <div className="d-flex flex-wrap gap-2">
-                  <Button
-                    variant="success"
-                    size="lg"
-                    onClick={() => handleCheckResult(check.id, 'completed')}
-                    disabled={isCompleted}
-                  >
-                    <i className="bi bi-check-circle me-2"></i>
-                    {t('inspection.actions.pass')}
-                  </Button>
+                  {job.status === 'pending' && (
+                    <Button
+                      variant="success"
+                      size="lg"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleJobAction(job.id, 'start')
+                      }}
+                    >
+                      <i className="bi bi-play-fill me-2"></i>
+                      {t('jobs.actions.start_job')}
+                    </Button>
+                  )}
+                  
+                  {job.status === 'in_progress' && (
+                    <Button
+                      variant="warning"
+                      size="lg"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleJobAction(job.id, 'complete')
+                      }}
+                    >
+                      <i className="bi bi-check-circle me-2"></i>
+                      {t('jobs.actions.complete_job')}
+                    </Button>
+                  )}
                   
                   <Button
-                    variant="danger"
+                    variant="primary"
                     size="lg"
-                    onClick={() => handleCheckResult(check.id, 'failed')}
-                    disabled={isFailed}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      showMap(job)
+                    }}
                   >
-                    <i className="bi bi-x-circle me-2"></i>
-                    {t('inspection.actions.fail')}
-                  </Button>
-                  
-                  <Button
-                    variant="outline-secondary"
-                    size="lg"
-                    onClick={() => handleAddNote(check.id)}
-                  >
-                    <i className="bi bi-sticky me-2"></i>
-                    {t('inspection.actions.add_note')}
-                  </Button>
-                  
-                  <Button
-                    variant="outline-secondary"
-                    size="lg"
-                    onClick={() => speak('Camera feature not implemented')}
-                  >
-                    <i className="bi bi-camera me-2"></i>
-                    {t('inspection.actions.take_photo')}
-                  </Button>
-                  
-                  <Button
-                    variant="outline-secondary"
-                    size="lg"
-                    onClick={() => speak(check.text)}
-                  >
-                    <i className="bi bi-mic me-2"></i>
-                    {t('inspection.actions.voice_memo')}
+                    <i className="bi bi-navigation me-2"></i>
+                    Start Navigation
                   </Button>
                 </div>
-              </div>
-            )
-          })}
-        </Card.Body>
-      </Card>
-
-      {/* Navigation Buttons */}
-      <Row>
-        <Col className="d-flex justify-content-between">
-          <Button
-            variant="outline-secondary"
-            size="lg"
-            onClick={previousSection}
-            disabled={currentSection === 0}
-          >
-            <i className="bi bi-arrow-left me-2"></i>
-            {t('common.previous')}
-          </Button>
-          
-          {currentSection === sections.length - 1 ? (
-            <Button
-              variant="success"
-              size="lg"
-              onClick={completeInspection}
-              disabled={progress < 100}
-            >
-              <i className="bi bi-check-circle me-2"></i>
-              {t('inspection.actions.complete')}
-            </Button>
-          ) : (
-            <Button
-              variant="warning"
-              size="lg"
-              onClick={nextSection}
-            >
-              {t('inspection.actions.next_section')}
-              <i className="bi bi-arrow-right ms-2"></i>
-            </Button>
-          )}
-        </Col>
+              </Card.Footer>
+            </Card>
+          </Col>
+        ))}
       </Row>
 
-      {/* Note Modal */}
-      <Modal show={!!showNoteModal} onHide={() => setShowNoteModal(false)} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>Add Note</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form.Group>
-            <Form.Label>Note</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={4}
-              value={currentNote}
-              onChange={(e) => setCurrentNote(e.target.value)}
-              placeholder="Add your inspection notes here..."
-              style={{ fontSize: '18px' }}
-            />
-          </Form.Group>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowNoteModal(false)}>
-            {t('common.cancel')}
-          </Button>
-          <Button variant="primary" onClick={saveNote}>
-            {t('common.save')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* Map Navigation Modal */}
+      {selectedJob && (
+        <MapNavigator
+          show={showMapModal}
+          onHide={() => setShowMapModal(false)}
+          destination={selectedJob.coordinates}
+          jobTitle={selectedJob.title}
+        />
+      )}
     </main>
   )
 }
 
-export default PreOperationInspection
+export default JobBriefing
