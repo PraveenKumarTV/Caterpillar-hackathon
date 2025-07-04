@@ -32,7 +32,7 @@ const fields = [
   },
   {
     name: "area_of_work",
-    label: "Area of Work (km²)",
+    label: "Area of Work (m²)",
     icon: <FaRulerCombined />,
     type: "number",
     placeholder: "e.g. 1.5",
