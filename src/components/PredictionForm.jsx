@@ -101,18 +101,24 @@ export default function PredictionForm({ setPrediction }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setPrediction(null);
-    try {
-      const res = await axios.post("http://localhost:8000/predict", formData);
-      setPrediction(res.data.predicted_duration);
-    } catch (err) {
-      console.error("Prediction failed:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  e.preventDefault();
+  setLoading(true);
+  setPrediction(null);
+
+  try {
+    const res = await axios.post("http://localhost:8000/predict", formData);
+    const predictedValue = res.data.predicted_duration;
+
+    // ✅ Correctly pass both prediction and form data
+    setPrediction(predictedValue, formData);
+  } catch (err) {
+    console.error("Prediction failed:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
   const toggleTooltip = (fieldName) => {
     const icon = iconRefs.current[fieldName];
