@@ -10,7 +10,7 @@ import {
   FaMountain,
   FaThermometerHalf,
   FaGlobeAmericas,
-  FaEye,
+  FaInfoCircle, // ✅ Replaced FaEye with FaInfoCircle
 } from "react-icons/fa";
 
 const fields = [
@@ -79,7 +79,6 @@ const fields = [
     info: "Height of the site above sea level.",
   },
 ];
-
 
 export default function PredictionForm({ setPrediction }) {
   const [formData, setFormData] = useState({
@@ -153,87 +152,89 @@ export default function PredictionForm({ setPrediction }) {
       transition={{ duration: 0.5 }}
     >
       <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-        {fields.reduce((rows, field, index) => {
-  if (index % 2 === 0) {
-    rows.push([field]);
-  } else {
-    rows[rows.length - 1].push(field);
-  }
-  return rows;
-}, []).map((pair, rowIndex) => (
-  <div key={rowIndex} className="form-row">
-    {pair.map(({ name, label, type, placeholder, options, icon, info }) => (
-      <motion.div
-        key={name}
-        className="form-field"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <div className="flex items-center justify-between mb-1">
-          <label className="font-semibold flex items-center gap-2">
-            {icon} {label}
-            <button
-              type="button"
-              ref={(el) => (iconRefs.current[name] = el)}
-              className="eye-icon ml-2"
-              onClick={() => toggleTooltip(name)}
-            >
-              <FaEye />
-            </button>
-          </label>
-        </div>
+        {fields
+          .reduce((rows, field, index) => {
+            if (index % 2 === 0) {
+              rows.push([field]);
+            } else {
+              rows[rows.length - 1].push(field);
+            }
+            return rows;
+          }, [])
+          .map((pair, rowIndex) => (
+            <div key={rowIndex} className="form-row">
+              {pair.map(({ name, label, type, placeholder, options, icon, info }) => (
+                <motion.div
+                  key={name}
+                  className="form-field"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="font-semibold flex items-center gap-2">
+                      {icon} {label}
+                      <button
+                        type="button"
+                        ref={(el) => (iconRefs.current[name] = el)}
+                        className="info-icon ml-2"
+                        onClick={() => toggleTooltip(name)}
+                      >
+                        <FaInfoCircle />
+                      </button>
+                    </label>
+                  </div>
 
-        {type === "select" ? (
-          <select
-            name={name}
-            value={formData[name]}
-            onChange={handleChange}
-            className="custom-select"
-            required
-          >
-            <option value="" disabled>
-              Select {label}
-            </option>
-            {options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <input
-            name={name}
-            type={type}
-            value={formData[name]}
-            onChange={handleChange}
-            placeholder={placeholder}
-            className="custom-input"
-            required
-          />
-        )}
+                  {type === "select" ? (
+                    <select
+                      name={name}
+                      value={formData[name]}
+                      onChange={handleChange}
+                      className="custom-select"
+                      required
+                    >
+                      <option value="" disabled>
+                        Select {label}
+                      </option>
+                      {options.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      name={name}
+                      type={type}
+                      value={formData[name]}
+                      onChange={handleChange}
+                      placeholder={placeholder}
+                      className="custom-input"
+                      required
+                    />
+                  )}
 
-        <AnimatePresence>
-          {tooltip.visible && tooltip.field === name && (
-            <motion.div
-              className="info-tooltip fixed"
-              style={{ top: tooltip.y, left: tooltip.x }}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.2 }}
-            >
-              {info}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-    ))}
-  </div>
-))}
-<button type="submit" className="submit-btn">
-    {loading ? "Estimating..." : "Predict Duration"}
-  </button>
+                  <AnimatePresence>
+                    {tooltip.visible && tooltip.field === name && (
+                      <motion.div
+                        className="info-tooltip fixed"
+                        style={{ top: tooltip.y, left: tooltip.x }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {info}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </div>
+          ))}
+        <button type="submit" className="submit-btn">
+          {loading ? "Estimating..." : "Predict Duration"}
+        </button>
       </form>
     </motion.div>
   );
